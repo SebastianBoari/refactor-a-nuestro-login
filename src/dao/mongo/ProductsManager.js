@@ -19,13 +19,15 @@ class ProductManager {
 		
 		let formatSort 
 		if(sort === 'asc'){
-			formatSort = '1'
+			formatSort = 1
 		}else if(sort === 'desc'){
-			formatSort = '-1'
+			formatSort = -1
+		} else {
+			formatSort = 1
 		}
 		
 		try {
-			const products = await productsModel.paginate(formatQuery, {page: formatPage, limit: formatLimit, sort: { price: formatSort }, lean: true})
+			const products = await productsModel.paginate(formatQuery, {page: formatPage, limit: formatLimit, sort: { price: Number(formatSort) }, lean: true})
 
 			products.prevLink = products.hasPrevPage ? `?page=${products.prevPage}` : ''
 			products.nextLink = products.hasNextPage ? `?page=${products.nextPage}` : ''
