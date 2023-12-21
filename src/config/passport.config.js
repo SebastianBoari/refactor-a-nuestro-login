@@ -1,14 +1,16 @@
 import passport from 'passport'
 import local from 'passport-local'
+import jwt, { ExtractJwt } from 'passport-jwt'
 import GitHubStrategy from 'passport-github2'
 
-import { clientID, clientSecret, callbackURL } from '../../env.js'
+import { clientID, clientSecret, callbackURL, jwtKey } from '../../env.js'
 import { createHash, isValidPassword } from '../utils.js'
 
 import cartManager from '../dao/mongo/CartsManager.js'
 import userModel from '../dao/models/user.model.js'
 
 const LocalStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
 
 const initializePassport = () => {
 	
@@ -96,6 +98,22 @@ const initializePassport = () => {
 			return done(null, createdUser)
 		} catch (error) {
 			return done(error, false)
+		}
+	}))
+
+	const cookieExtractor = (req) => {
+		const token = (req && req.cookies) ? req.cookies['spazzio'] : null
+		return token
+	}
+
+	passport.use('jwt', new JWTStrategy({
+		jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+		secretOrKey: jwtKey
+	}, async (jwt_payload, done) => {
+		try {
+			return done(null, jwt_payload)
+		} catch(error) {
+			return done(error)
 		}
 	}))
 

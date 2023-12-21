@@ -5,7 +5,6 @@ const router = Router()
 
 router.get('/', async (req, res) => {
 	try {
-		// TODO: Realizar un limitador (Luego veremos aggregation y pagination con mongoose)
 		const products = await productManager.getProducts()
 		
 		res.send({ status: 'Success', payload: products })

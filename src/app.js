@@ -32,19 +32,17 @@ app.use(cors())
 app.engine('handlebars', handlebars.engine())
 app.set('views', './src/views')
 app.set('view engine', 'handlebars')
+
 // Session config
 app.use(session({
 	store: MongoStore.create({
-		mongoUrl: uri,
-		mongoOptions: {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-		}
+		mongoUrl: uri
 	}),
 	secret: saltWord,
 	resave: false,
 	saveUninitialized: false
 }))
+
 // Passport config
 initializePassport()
 app.use(passport.initialize())
